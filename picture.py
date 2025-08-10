@@ -1,12 +1,17 @@
+
+
+
+    
+
 import streamlit as st
 from PIL import Image, ImageOps, ImageFilter
 import numpy as np
 import time
 
-st.set_page_config(page_title="Hinata Sketch Animation", layout="centered")
-st.title("🎨 Hinata Pencil Sketch Animation")
+st.set_page_config(page_title="Pencil Sketch Animation", layout="centered")
+st.title("🎨 Animated Pencil Sketch Creator")
 
-uploaded_file = st.file_uploader("Upload an image", type=["png", "jpg", "jpeg"])
+uploaded_file = st.file_uploader("Upload any image to turn into a sketch", type=["png", "jpg", "jpeg"])
 
 if uploaded_file is not None:
     # Open and convert to grayscale
@@ -27,7 +32,7 @@ if uploaded_file is not None:
     st.subheader("Sketch Animation:")
     sketch_placeholder = st.empty()
 
-    # Animation: reveal sketch gradually
+    # Animation: reveal sketch gradually from top to bottom
     steps = 30  # number of frames
     for i in range(1, steps + 1):
         progress_mask = np.zeros_like(sketch_array)
@@ -37,8 +42,3 @@ if uploaded_file is not None:
         time.sleep(0.05)  # delay between frames
 
     st.success("✨ Drawing complete!")
-
-
-
-
-    
