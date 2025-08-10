@@ -1,33 +1,27 @@
 import streamlit as st
-import cv2
-from PIL import Image
+from PIL import Image, ImageOps, ImageFilter
 import numpy as np
 
-st.title("Hinata Pencil Sketch 🎨")
+st.title("Hinata Pencil Sketch 🎨 (No OpenCV)")
 
-# Upload your image
 uploaded_file = st.file_uploader("Upload an image", type=["png", "jpg", "jpeg"])
 
 if uploaded_file is not None:
-    # Open the image
+    # Open and convert to grayscale
     image = Image.open(uploaded_file).convert("RGB")
-    img_array = np.array(image)
-
-    # Convert to grayscale
-    gray_image = cv2.cvtColor(img_array, cv2.COLOR_RGB2GRAY)
+    gray_image = ImageOps.grayscale(image)
 
     # Invert the image
-    inverted = 255 - gray_image
+    inverted_image = ImageOps.invert(gray_image)
 
-    # Blur the image
-    blurred = cv2.GaussianBlur(inverted, (21, 21), 0)
+    # Blur the inverted image
+    blurred_image = inverted_image.filter(ImageFilter.GaussianBlur(21))
 
-    # Invert the blurred image
-    inverted_blur = 255 - blurred
+    # Create the pencil sketch using dodge blend
+    gray_array = np.array(gray_image, dtype=np.float32)
+    blur_array = np.array(blurred_image, dtype=np.float32)
+    sketch_array = np.clip(gray_array * 255 / (255 - blur_array + 1e-5), 0, 255).astype(np.uint8)
 
-    # Create the pencil sketch
-    sketch = cv2.divide(gray_image, inverted_blur, scale=256.0)
-
-    # Show original and sketch
+    # Show results
     st.image(image, caption="Original Image", use_column_width=True)
-    st.image(sketch, caption="Pencil Sketch", use_column_width=True, channels="GRAY")
+    st.image(sketch_array, caption="Pencil Sketch", use_column_width=True, channels="GRAY")
