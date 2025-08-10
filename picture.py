@@ -1,5 +1,3 @@
-
-
 import streamlit as st
 from PIL import Image, ImageOps, ImageFilter
 import numpy as np
@@ -35,7 +33,12 @@ if uploaded_file is not None:
         progress_mask = np.zeros_like(sketch_array)
         rows = int((i / steps) * sketch_array.shape[0])
         progress_mask[:rows, :] = sketch_array[:rows, :]
-        sketch_placeholder.image(progress_mask, use_column_width=True, channels="GRAY")
+        sketch_placeholder.image(progress_mask, use_container_width=True, channels="GRAY")
         time.sleep(0.05)  # delay between frames
 
     st.success("✨ Drawing complete!")
+
+
+
+
+    
