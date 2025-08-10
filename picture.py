@@ -1,21 +1,18 @@
-
-
-
-    
-
 import streamlit as st
 from PIL import Image, ImageOps, ImageFilter
 import numpy as np
 import time
+import os
 
-st.set_page_config(page_title="Pencil Sketch Animation", layout="centered")
-st.title("🎨 Animated Pencil Sketch Creator")
+st.set_page_config(page_title="Automatic Pencil Sketch", layout="centered")
+st.title("🎨 My Sweet pussy")
 
-uploaded_file = st.file_uploader("Upload any image to turn into a sketch", type=["png", "jpg", "jpeg"])
+# Path to your default image
+image_path = "default.jpg"  # change this to your file name
 
-if uploaded_file is not None:
+if os.path.exists(image_path):
     # Open and convert to grayscale
-    image = Image.open(uploaded_file).convert("RGB")
+    image = Image.open(image_path).convert("RGB")
     gray_image = ImageOps.grayscale(image)
 
     # Invert the image
@@ -32,13 +29,21 @@ if uploaded_file is not None:
     st.subheader("Sketch Animation:")
     sketch_placeholder = st.empty()
 
-    # Animation: reveal sketch gradually from top to bottom
+    # Animation: reveal sketch gradually
     steps = 30  # number of frames
     for i in range(1, steps + 1):
         progress_mask = np.zeros_like(sketch_array)
         rows = int((i / steps) * sketch_array.shape[0])
         progress_mask[:rows, :] = sketch_array[:rows, :]
         sketch_placeholder.image(progress_mask, use_container_width=True, channels="GRAY")
-        time.sleep(0.05)  # delay between frames
+        time.sleep(0.05)
 
     st.success("✨ Drawing complete!")
+
+else:
+    st.error(f"Image file '{image_path}' not found. Please add it to the project folder.")
+
+
+
+    
+
