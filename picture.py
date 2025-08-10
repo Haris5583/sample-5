@@ -1,17 +1,33 @@
 import streamlit as st
-from sketchpy import canvas
-import os
+import cv2
+from PIL import Image
+import numpy as np
 
-st.title("Sketchpy Drawing Demo 🎨")
+st.title("Hinata Pencil Sketch 🎨")
 
-image_path = "hinata.png"  # Place this in the same folder as app.py
+# Upload your image
+uploaded_file = st.file_uploader("Upload an image", type=["png", "jpg", "jpeg"])
 
-if os.path.exists(image_path):
-    # Draw the sketch and save it
-    obj = canvas.sketch_from_image(image_path)
-    obj.draw()  # This will still try to open a turtle window locally
-    
-    # Instead of displaying turtle window, just show original image
-    st.image(image_path, caption="Hinata Sketch", use_column_width=True)
-else:
-    st.error(f"Image not found: {image_path}")
+if uploaded_file is not None:
+    # Open the image
+    image = Image.open(uploaded_file).convert("RGB")
+    img_array = np.array(image)
+
+    # Convert to grayscale
+    gray_image = cv2.cvtColor(img_array, cv2.COLOR_RGB2GRAY)
+
+    # Invert the image
+    inverted = 255 - gray_image
+
+    # Blur the image
+    blurred = cv2.GaussianBlur(inverted, (21, 21), 0)
+
+    # Invert the blurred image
+    inverted_blur = 255 - blurred
+
+    # Create the pencil sketch
+    sketch = cv2.divide(gray_image, inverted_blur, scale=256.0)
+
+    # Show original and sketch
+    st.image(image, caption="Original Image", use_column_width=True)
+    st.image(sketch, caption="Pencil Sketch", use_column_width=True, channels="GRAY")
