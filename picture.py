@@ -4,8 +4,8 @@ import numpy as np
 import time
 import os
 
-st.set_page_config(page_title="Automatic Pencil Sketch", layout="centered")
-st.title("🎨 My Sweet pussy")
+st.set_page_config(page_title="Ye Lay Bahi Khosh Hoja", layout="centered")
+st.title("🎨  Your Sweet pussy  ")
 
 # Path to your default image
 image_path = "default.jpg"  # change this to your file name
@@ -46,4 +46,5 @@ else:
 
 
     
+
 
